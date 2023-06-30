@@ -1,0 +1,50 @@
+{% extends "index.html" %}
+{% block body %}
+<div>
+    <div class="container">
+      <div class="row mt-4">
+        <div class="col-sm-6">
+          <div class="form-group">
+            <form method="POST" action="{{ url_for('translate') }}">
+              <textarea
+                class="form-control"
+                id="original-text"
+                name="original-text"
+                rows="4"
+                placeholder="Enter text here..."
+              >{{ original_text }}</textarea>
+              <div class="row mt-2">
+                <div class="col-md-2">
+                  <button type="submit" class="btn btn-primary">
+                    Translate
+                  </button>
+                </div>
+                <div class="col-md-3">
+                  <select class="form-control" id="color-select" name="color-select">
+                    <option value="">Select Language</option>
+                    <option value="en">English</option>
+                    <option value="it">Italian</option>
+                    <option value="ja">Japanese</option>
+                    <option value="ru">Russian</option>
+                    <option value="de">German</option>
+                  </select>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="col-sm-6 ml-auto">
+          <div class="form-group">
+            <textarea
+              class="form-control"
+              id="translation-text"
+              rows="4"
+              placeholder="Translated text here..."
+            >{{ translation }}</textarea>
+            <button type="submit" class="btn btn-success mt-2">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
