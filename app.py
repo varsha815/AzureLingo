@@ -1,6 +1,8 @@
-from flask import Flask, render_template, request
+import uuid
+import requests
+from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, render_template, request, url_for, redirect
 from azure_secrets import KEY, ENDPOINT, LOCATION
-import requests, uuid
 
 
 def translate_text(original_text, target_language):
@@ -25,6 +27,14 @@ def translate_text(original_text, target_language):
 
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///translations.db'
+db = SQLAlchemy(app)
+
+
+class Translation(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    original_text = db.Column(db.String(200))
+    translated_text = db.Column(db.String(200))
 
 
 @app.route("/")
@@ -38,9 +48,34 @@ def translate():
         original_text = request.form.get('original-text')
         selected_language = request.form.get('color-select')
         translation = translate_text(original_text, selected_language)
-        return render_template('translate.html', translation=translation, original_text=original_text)
+
+        # Save the translation to the database
+        new_translation = Translation(original_text=original_text, translated_text=translation)
+        db.session.add(new_translation)
+        db.session.commit()
+
+        # Retrieve the history from the database, sorted by ID in descending order
+        history = Translation.query.order_by(Translation.id.desc()).all()
+
+        return render_template('translate.html', translation=translation, original_text=original_text, history=history)
     else:
-        return render_template('translate.html')
+        # Retrieve the history from the database, sorted by ID in descending order
+        history = Translation.query.order_by(Translation.id.desc()).all()
+        return render_template('translate.html', history=history)
+
+
+
+@app.route("/save_translation", methods=['POST'])
+def save_translation():
+    original_text = request.form.get('original-text')
+    translated_text = request.form.get('translated-text')
+
+    # Store the translation in the database
+    translation_entry = Translation(original_text=original_text, translated_text=translated_text)
+    db.session.add(translation_entry)
+    db.session.commit()
+
+    return redirect(url_for('translate'))
 
 
 if __name__ == '__main__':
