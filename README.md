@@ -13,3 +13,7 @@ It leverages the power of Azure's cloud-based translation capabilities to provid
 4. Cloud-powered performance: AzureLingo takes advantage of Azure's cloud infrastructure, providing fast and efficient translation services with minimal latency.
 
 5. History tracking: The app keeps track of translation history, allowing users to review their past translations and easily access previously translated text.
+
+### Version:
+1. Translate service in 5 languages.
+2. History of translation.
