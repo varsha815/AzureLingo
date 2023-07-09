@@ -46,14 +46,14 @@ def index():
 def translate():
     if request.method == 'POST':
         original_text = request.form.get('original-text')
-        selected_language = request.form.get('color-select')
+        selected_language = request.form.get('language-select')
         translation = translate_text(original_text, selected_language)
-
+        '''
         # Save the translation to the database
         new_translation = Translation(original_text=original_text, translated_text=translation)
         db.session.add(new_translation)
         db.session.commit()
-
+        '''
         # Retrieve the history from the database, sorted by ID in descending order
         history = Translation.query.order_by(Translation.id.desc()).all()
 
@@ -64,16 +64,15 @@ def translate():
         return render_template('translate.html', history=history)
 
 
-
 @app.route("/save_translation", methods=['POST'])
 def save_translation():
     original_text = request.form.get('original-text')
     translated_text = request.form.get('translated-text')
 
-    # Store the translation in the database
-    translation_entry = Translation(original_text=original_text, translated_text=translated_text)
-    db.session.add(translation_entry)
-    db.session.commit()
+    if len(translated_text) > 2:
+        translation_entry = Translation(original_text=original_text, translated_text=translated_text)
+        db.session.add(translation_entry)
+        db.session.commit()
 
     return redirect(url_for('translate'))
 

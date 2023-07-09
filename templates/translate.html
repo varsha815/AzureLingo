@@ -14,15 +14,14 @@
                 rows="4"
                 placeholder="Enter text here..."
               >{{ original_text }}</textarea>
-              <div class="row mt-2">
-                <div class="col-md-2">
+              <div class="row mt-1">
+                <div class="col">
                   <button type="submit" class="btn btn-primary">
                     Translate
                   </button>
                 </div>
-                <div class="col-md-3">
-                  <select class="form-control" id="color-select" name="color-select">
-                    <option value="">Select Language</option>
+                <div class="col">
+                  <select class="form-control" id="language-select" name="language-select">
                     <option value="en">English</option>
                     <option value="it">Italian</option>
                     <option value="ja">Japanese</option>
@@ -30,6 +29,7 @@
                     <option value="de">German</option>
                   </select>
                 </div>
+
               </div>
             </form>
           </div>
@@ -44,8 +44,8 @@
             >{{ translation }}</textarea>
             <form method="POST" action="{{ url_for('save_translation') }}">
               <input type="hidden" name="original-text" value="{{ original_text }}">
-              <input type="hidden" name="translated-text" value="{{ translation }}">
-              <button type="submit" class="btn btn-success mt-2">Save</button>
+              <input type="hidden" name="translated-text" value="{{ translation }}" id="translate-box">
+              <button type="submit" class="btn btn-success mt-2" id="saveButton">Save</button>
             </form>
           </div>
         </div>
